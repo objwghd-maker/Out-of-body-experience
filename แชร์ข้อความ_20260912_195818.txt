@@ -1,0 +1,499 @@
+​local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+local UserInputService = game:GetService("UserInputService")
+local LocalPlayer = Players.LocalPlayer
+​local IMAGE_URL = "https://i.ibb.co/VXTycfD/file-0000000023c48230964f3957048bed95.png"
+​local ScreenGui = Instance.new("ScreenGui")
+ScreenGui.Name = "OutOfBodyExperience"
+ScreenGui.ResetOnSpawn = false
+ScreenGui.Parent = LocalPlayer:WaitForChild("PlayerGui")
+​local MainFrame = Instance.new("Frame")
+MainFrame.Name = "MainFrame"
+MainFrame.Parent = ScreenGui
+MainFrame.Size = UDim2.new(0, 240, 0, 300)
+MainFrame.Position = UDim2.new(0.2, 0, 0.3, 0)
+MainFrame.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+MainFrame.BackgroundTransparency = 0.0
+MainFrame.Active = true
+MainFrame.Draggable = true
+MainFrame.ClipsDescendants = true
+​local MainCorner = Instance.new("UICorner")
+MainCorner.CornerRadius = UDim.new(0, 10)
+MainCorner.Parent = MainFrame
+​local MainStroke = Instance.new("UIStroke")
+MainStroke.Color = Color3.fromRGB(255, 255, 255)
+MainStroke.Transparency = 0.3
+MainStroke.Thickness = 1.5
+MainStroke.Parent = MainFrame
+​local BackgroundImage = Instance.new("ImageLabel")
+BackgroundImage.Name = "BackgroundImage"
+BackgroundImage.Parent = MainFrame
+BackgroundImage.Size = UDim2.new(1, 0, 1, 0)
+BackgroundImage.Position = UDim2.new(0, 0, 0, 0)
+BackgroundImage.BackgroundTransparency = 1
+BackgroundImage.ImageTransparency = 0.0
+BackgroundImage.ScaleType = Enum.ScaleType.Crop
+BackgroundImage.ZIndex = 0
+​task.spawn(function()
+local tempFile = "custom_gui_bg_" .. tick() .. ".png"
+if writefile and getgenv then
+pcall(function()
+if not isfile(tempFile) then
+writefile(tempFile, game:HttpGet(IMAGE_URL))
+end
+BackgroundImage.Image = getcustomasset(tempFile)
+end)
+else
+BackgroundImage.Image = IMAGE_URL
+end
+end)
+​local TitleBar = Instance.new("Frame")
+TitleBar.Name = "TitleBar"
+TitleBar.Parent = MainFrame
+TitleBar.Size = UDim2.new(1, 0, 0, 34)
+TitleBar.Position = UDim2.new(0, 0, 0, 0)
+TitleBar.BackgroundTransparency = 1
+TitleBar.BorderSizePixel = 0
+TitleBar.ZIndex = 2
+​local TitleLabel = Instance.new("TextLabel")
+TitleLabel.Parent = TitleBar
+TitleLabel.Size = UDim2.new(1, -36, 1, 0)
+TitleLabel.Position = UDim2.new(0, 10, 0, 0)
+TitleLabel.BackgroundTransparency = 1
+TitleLabel.Text = "Out-of-body experience"
+TitleLabel.Font = Enum.Font.GothamBold
+TitleLabel.TextSize = 13
+TitleLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+TitleLabel.TextXAlignment = Enum.TextXAlignment.Left
+TitleLabel.ZIndex = 2
+​local CollapseButton = Instance.new("TextButton")
+CollapseButton.Parent = TitleBar
+CollapseButton.Size = UDim2.new(0, 24, 0, 24)
+CollapseButton.Position = UDim2.new(1, -30, 0, 5)
+CollapseButton.BackgroundTransparency = 1
+CollapseButton.Text = "-"
+CollapseButton.Font = Enum.Font.GothamBold
+CollapseButton.TextSize = 16
+CollapseButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+CollapseButton.ZIndex = 2
+​local CollapseStroke = Instance.new("UIStroke")
+CollapseStroke.Color = Color3.fromRGB(255, 255, 255)
+CollapseStroke.Transparency = 0.3
+CollapseStroke.Parent = CollapseButton
+​local CollapseCorner = Instance.new("UICorner")
+CollapseCorner.CornerRadius = UDim.new(0, 6)
+CollapseCorner.Parent = CollapseButton
+​local ContentFrame = Instance.new("ScrollingFrame")
+ContentFrame.Name = "ContentFrame"
+ContentFrame.Parent = MainFrame
+ContentFrame.Size = UDim2.new(1, -16, 1, -44)
+ContentFrame.Position = UDim2.new(0, 8, 0, 40)
+ContentFrame.BackgroundTransparency = 1
+ContentFrame.ScrollBarThickness = 4
+ContentFrame.CanvasSize = UDim2.new(0, 0, 0, 0)
+ContentFrame.AutomaticCanvasSize = Enum.AutomaticSize.Y
+ContentFrame.ZIndex = 2
+​local ListLayout = Instance.new("UIListLayout")
+ListLayout.Parent = ContentFrame
+ListLayout.Padding = UDim.new(0, 8)
+ListLayout.SortOrder = Enum.SortOrder.LayoutOrder
+​local function applyTransparentStyle(btn, strokeColor)
+btn.BackgroundTransparency = 0.2
+btn.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+btn.ZIndex = 2
+local stroke = Instance.new("UIStroke")
+stroke.Color = strokeColor or Color3.fromRGB(255, 255, 255)
+stroke.Transparency = 0.2
+stroke.Thickness = 1.2
+stroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+stroke.Parent = btn
+end
+​local ToggleButton = Instance.new("TextButton")
+ToggleButton.Name = "ToggleButton"
+ToggleButton.Parent = ContentFrame
+ToggleButton.Size = UDim2.new(1, 0, 0, 35)
+ToggleButton.Font = Enum.Font.GothamBold
+ToggleButton.Text = "OFF"
+ToggleButton.TextColor3 = Color3.fromRGB(255, 80, 80)
+ToggleButton.TextSize = 14.0
+applyTransparentStyle(ToggleButton, Color3.fromRGB(255, 80, 80))
+​local UICornerButton = Instance.new("UICorner")
+UICornerButton.CornerRadius = UDim.new(0, 6)
+UICornerButton.Parent = ToggleButton
+​local CamSpeedInput = Instance.new("TextBox")
+CamSpeedInput.Name = "CamSpeedInput"
+CamSpeedInput.Parent = ContentFrame
+CamSpeedInput.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+CamSpeedInput.BackgroundTransparency = 0.2
+CamSpeedInput.Size = UDim2.new(1, 0, 0, 30)
+CamSpeedInput.Font = Enum.Font.Gotham
+CamSpeedInput.PlaceholderText = "Cam Speed"
+CamSpeedInput.Text = "80"
+CamSpeedInput.TextColor3 = Color3.fromRGB(255, 255, 255)
+CamSpeedInput.TextSize = 13.0
+CamSpeedInput.ZIndex = 2
+​local SpeedStroke = Instance.new("UIStroke")
+SpeedStroke.Color = Color3.fromRGB(255, 255, 255)
+SpeedStroke.Transparency = 0.3
+SpeedStroke.Parent = CamSpeedInput
+​local UICornerInput = Instance.new("UICorner")
+UICornerInput.CornerRadius = UDim.new(0, 6)
+UICornerInput.Parent = CamSpeedInput
+​local EspButton = Instance.new("TextButton")
+EspButton.Name = "EspButton"
+EspButton.Parent = ContentFrame
+EspButton.Size = UDim2.new(1, 0, 0, 30)
+EspButton.Font = Enum.Font.GothamBold
+EspButton.Text = "ESP: OFF"
+EspButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+EspButton.TextSize = 13.0
+applyTransparentStyle(EspButton, Color3.fromRGB(255, 255, 255))
+​local UICornerEsp = Instance.new("UICorner")
+UICornerEsp.CornerRadius = UDim.new(0, 6)
+UICornerEsp.Parent = EspButton
+​local PlayerSearchInput = Instance.new("TextBox")
+PlayerSearchInput.Name = "PlayerSearchInput"
+PlayerSearchInput.Parent = ContentFrame
+PlayerSearchInput.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+PlayerSearchInput.BackgroundTransparency = 0.2
+PlayerSearchInput.Size = UDim2.new(1, 0, 0, 30)
+PlayerSearchInput.Font = Enum.Font.Gotham
+PlayerSearchInput.PlaceholderText = "Target Name"
+PlayerSearchInput.Text = ""
+PlayerSearchInput.TextColor3 = Color3.fromRGB(255, 255, 255)
+PlayerSearchInput.TextSize = 12.0
+PlayerSearchInput.ZIndex = 2
+​local SearchStroke = Instance.new("UIStroke")
+SearchStroke.Color = Color3.fromRGB(255, 255, 255)
+SearchStroke.Transparency = 0.3
+SearchStroke.Parent = PlayerSearchInput
+​local UICornerSearch = Instance.new("UICorner")
+UICornerSearch.CornerRadius = UDim.new(0, 6)
+UICornerSearch.Parent = PlayerSearchInput
+​local ActionRow = Instance.new("Frame")
+ActionRow.Name = "ActionRow"
+ActionRow.Parent = ContentFrame
+ActionRow.Size = UDim2.new(1, 0, 0, 30)
+ActionRow.BackgroundTransparency = 1
+ActionRow.ZIndex = 2
+​local FollowButton = Instance.new("TextButton")
+FollowButton.Name = "FollowButton"
+FollowButton.Parent = ActionRow
+FollowButton.Position = UDim2.new(0, 0, 0, 0)
+FollowButton.Size = UDim2.new(0.48, 0, 1, 0)
+FollowButton.Font = Enum.Font.GothamBold
+FollowButton.Text = "FOLLOW"
+FollowButton.TextColor3 = Color3.fromRGB(180, 100, 255)
+FollowButton.TextSize = 11.0
+applyTransparentStyle(FollowButton, Color3.fromRGB(180, 100, 255))
+​local UICornerFollow = Instance.new("UICorner")
+UICornerFollow.CornerRadius = UDim.new(0, 6)
+UICornerFollow.Parent = FollowButton
+​local GotoButton = Instance.new("TextButton")
+GotoButton.Name = "GotoButton"
+GotoButton.Parent = ActionRow
+GotoButton.Position = UDim2.new(0.52, 0, 0, 0)
+GotoButton.Size = UDim2.new(0.48, 0, 1, 0)
+GotoButton.Font = Enum.Font.GothamBold
+GotoButton.Text = "GOTO"
+GotoButton.TextColor3 = Color3.fromRGB(255, 200, 50)
+GotoButton.TextSize = 11.0
+applyTransparentStyle(GotoButton, Color3.fromRGB(255, 200, 50))
+​local UICornerGoto = Instance.new("UICorner")
+UICornerGoto.CornerRadius = UDim.new(0, 6)
+UICornerGoto.Parent = GotoButton
+​local collapsed = false
+local expandedSize = MainFrame.Size
+​CollapseButton.MouseButton1Click:Connect(function()
+collapsed = not collapsed
+if collapsed then
+MainFrame:TweenSize(UDim2.new(0, expandedSize.X.Offset, 0, 34), Enum.EasingDirection.Out, Enum.EasingStyle.Quad, 0.2, true)
+CollapseButton.Text = "+"
+else
+MainFrame:TweenSize(expandedSize, Enum.EasingDirection.Out, Enum.EasingStyle.Quad, 0.2, true)
+CollapseButton.Text = "-"
+end
+end)
+​local isRunning = false
+local espActive = false
+local isFollowing = false
+local followTarget = nil
+local flySpeed = 80
+local gotoSpeed = 300
+local isTweening = false
+​local freecamPos = Vector3.new()
+local rotX = 0
+local rotY = 0
+​local renderConnection = nil
+local touchConnection = nil
+local espFolder = Instance.new("Folder", game.CoreGui)
+espFolder.Name = "FreecamESPFolder"
+​local SENSITIVITY = 0.4
+​CamSpeedInput.FocusLost:Connect(function()
+local val = tonumber(CamSpeedInput.Text)
+if val then
+flySpeed = val
+else
+CamSpeedInput.Text = tostring(flySpeed)
+end
+end)
+​local function clearEsp()
+espFolder:ClearAllChildren()
+end
+​local function updateEsp()
+clearEsp()
+if not espActive then return end
+​for _, plr in pairs(Players:GetPlayers()) do
+if plr ~= LocalPlayer and plr.Character and plr.Character:FindFirstChild("Head") then
+local billboard = Instance.new("BillboardGui")
+billboard.Name = plr.Name .. "_ESP"
+billboard.Adornee = plr.Character.Head
+billboard.Size = UDim2.new(0, 200, 0, 50)
+billboard.StudsOffset = Vector3.new(0, 3, 0)
+billboard.AlwaysOnTop = true
+billboard.Parent = espFolder
+​local label = Instance.new("TextLabel")
+label.Parent = billboard
+label.Size = UDim2.new(1, 0, 1, 0)
+label.BackgroundTransparency = 1
+label.Text = plr.DisplayName .. "\n(@" .. plr.Name .. ")"
+label.TextColor3 = Color3.fromRGB(255, 30, 30)
+label.TextStrokeTransparency = 0
+label.TextStrokeColor3 = Color3.fromRGB(0, 0, 0)
+label.Font = Enum.Font.GothamBold
+label.TextSize = 14
+end
+end
+end
+​EspButton.MouseButton1Click:Connect(function()
+espActive = not espActive
+local stroke = EspButton:FindFirstChildOfClass("UIStroke")
+if espActive then
+EspButton.Text = "ESP: ON"
+EspButton.TextColor3 = Color3.fromRGB(0, 200, 255)
+if stroke then stroke.Color = Color3.fromRGB(0, 200, 255) end
+updateEsp()
+else
+EspButton.Text = "ESP: OFF"
+EspButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+if stroke then stroke.Color = Color3.fromRGB(255, 255, 255) end
+clearEsp()
+end
+end)
+​Players.PlayerAdded:Connect(function() if espActive then task.wait(1) updateEsp() end end)
+Players.PlayerRemoving:Connect(function(plr)
+if espActive then updateEsp() end
+if followTarget == plr then
+stopFollow()
+end
+end)
+​local function flyToPlayer(targetPlr)
+if not isRunning or not targetPlr.Character or not targetPlr.Character:FindFirstChild("HumanoidRootPart") then return end
+​local targetHrp = targetPlr.Character.HumanoidRootPart
+local targetCFrame = targetHrp.CFrame * CFrame.new(0, 2, -6)
+local targetPos = targetCFrame.Position
+​local distance = (freecamPos - targetPos).Magnitude
+local duration = distance / gotoSpeed
+local startTime = tick()
+local startPos = freecamPos
+​isTweening = true
+​local lookCFrame = CFrame.lookAt(targetPos, targetHrp.Position)
+local rx, ry, rz = lookCFrame:ToOrientation()
+rotX = math.deg(ry)
+rotY = math.deg(rx)
+​while tick() - startTime < duration do
+if not isRunning then break end
+local alpha = (tick() - startTime) / duration
+freecamPos = startPos:Lerp(targetPos, math.min(alpha, 1))
+task.wait()
+end
+​if isRunning then
+freecamPos = targetPos
+end
+isTweening = false
+end
+​local function findTargetPlayer()
+local query = PlayerSearchInput.Text:lower()
+if query == "" then return nil end
+​for _, plr in pairs(Players:GetPlayers()) do
+if plr ~= LocalPlayer then
+if plr.Name:lower():find(query) or plr.DisplayName:lower():find(query) then
+return plr
+end
+end
+end
+return nil
+end
+​GotoButton.MouseButton1Click:Connect(function()
+if isFollowing then
+stopFollow()
+end
+local target = findTargetPlayer()
+if target then
+if not isRunning then
+ToggleButton.Text = "ON"
+ToggleButton.TextColor3 = Color3.fromRGB(80, 255, 80)
+local stroke = ToggleButton:FindFirstChildOfClass("UIStroke")
+if stroke then stroke.Color = Color3.fromRGB(80, 255, 80) end
+enableFreeCam()
+end
+flyToPlayer(target)
+end
+end)
+​function stopFollow()
+isFollowing = false
+followTarget = nil
+FollowButton.Text = "FOLLOW"
+FollowButton.TextColor3 = Color3.fromRGB(180, 100, 255)
+local stroke = FollowButton:FindFirstChildOfClass("UIStroke")
+if stroke then stroke.Color = Color3.fromRGB(180, 100, 255) end
+​local camera = workspace.CurrentCamera
+​if isRunning then
+camera.CameraType = Enum.CameraType.Scriptable
+if LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then
+freecamPos = camera.CFrame.Position
+local rx, ry, rz = camera.CFrame:ToOrientation()
+rotX = math.deg(ry)
+rotY = math.deg(rx)
+end
+else
+if LocalPlayer.Character and LocalPlayer.Character:FindFirstChildOfClass("Humanoid") then
+camera.CameraSubject = LocalPlayer.Character:FindFirstChildOfClass("Humanoid")
+end
+camera.CameraType = Enum.CameraType.Custom
+end
+end
+​FollowButton.MouseButton1Click:Connect(function()
+if isFollowing then
+stopFollow()
+else
+local target = findTargetPlayer()
+if target then
+if isRunning then
+isRunning = false
+ToggleButton.Text = "OFF"
+ToggleButton.TextColor3 = Color3.fromRGB(255, 80, 80)
+local stroke = ToggleButton:FindFirstChildOfClass("UIStroke")
+if stroke then stroke.Color = Color3.fromRGB(255, 80, 80) end
+disableFreeCam()
+end
+followTarget = target
+isFollowing = true
+FollowButton.Text = "STOP"
+FollowButton.TextColor3 = Color3.fromRGB(255, 50, 50)
+local stroke = FollowButton:FindFirstChildOfClass("UIStroke")
+if stroke then stroke.Color = Color3.fromRGB(255, 50, 50) end
+​local camera = workspace.CurrentCamera
+camera.CameraType = Enum.CameraType.Custom
+end
+end
+end)
+​function enableFreeCam()
+local character = LocalPlayer.Character
+if not character or not character:FindFirstChild("HumanoidRootPart") then return end
+​local hrp = character.HumanoidRootPart
+local humanoid = character:FindFirstChildOfClass("Humanoid")
+local camera = workspace.CurrentCamera
+​if humanoid then
+humanoid.WalkSpeed = 0
+humanoid.JumpPower = 0
+end
+​local startCFrame = hrp.CFrame * CFrame.new(0, 2, -5)
+freecamPos = startCFrame.Position
+​local rx, ry, rz = hrp.CFrame:ToOrientation()
+rotX = math.deg(ry)
+rotY = 0
+​camera.CameraType = Enum.CameraType.Scriptable
+​touchConnection = UserInputService.InputChanged:Connect(function(input, gameProcessed)
+if input.UserInputType == Enum.UserInputType.Touch or input.UserInputType == Enum.UserInputType.MouseMovement then
+if input.Position.X > (camera.ViewportSize.X * 0.25) then
+local delta = input.Delta
+rotX = rotX - (delta.X * SENSITIVITY)
+rotY = math.clamp(rotY - (delta.Y * SENSITIVITY), -89, 89)
+end
+end
+end)
+​renderConnection = RunService.RenderStepped:Connect(function(dt)
+if not isRunning then return end
+local camera = workspace.CurrentCamera
+local camRotation = CFrame.Angles(0, math.rad(rotX), 0) * CFrame.Angles(math.rad(rotY), 0, 0)
+​if not isTweening and character and humanoid then
+local moveVector = Vector3.new()
+local rawDir = humanoid.MoveDirection
+​if rawDir.Magnitude > 0 then
+local camCFrame = CFrame.new(freecamPos) * camRotation
+local currentCamLook = camera.CFrame.LookVector
+local currentCamRight = camera.CFrame.RightVector
+​local flatLook = Vector3.new(currentCamLook.X, 0, currentCamLook.Z)
+if flatLook.Magnitude > 0 then flatLook = flatLook.Unit end
+​local flatRight = Vector3.new(currentCamRight.X, 0, currentCamRight.Z)
+if flatRight.Magnitude > 0 then flatRight = flatRight.Unit end
+​local dotForward = rawDir:Dot(flatLook)
+local dotRight = rawDir:Dot(flatRight)
+​local moveDir = (camCFrame.LookVector * dotForward) + (camCFrame.RightVector * dotRight)
+if moveDir.Magnitude > 0 then
+moveVector = moveDir.Unit
+end
+end
+​freecamPos = freecamPos + (moveVector * flySpeed * dt)
+end
+​camera.CFrame = CFrame.new(freecamPos) * camRotation
+end)
+end
+​function disableFreeCam()
+if renderConnection then renderConnection:Disconnect() renderConnection = nil end
+if touchConnection then touchConnection:Disconnect() touchConnection = nil end
+​local camera = workspace.CurrentCamera
+​if LocalPlayer and LocalPlayer.Character then
+local humanoid = LocalPlayer.Character:FindFirstChildOfClass("Humanoid")
+if humanoid then
+humanoid.WalkSpeed = 16
+humanoid.JumpPower = 50
+if not isFollowing then
+camera.CameraSubject = humanoid
+end
+end
+end
+​if not isFollowing then
+camera.CameraType = Enum.CameraType.Custom
+end
+end
+​ToggleButton.MouseButton1Click:Connect(function()
+if isFollowing then
+stopFollow()
+end
+isRunning = not isRunning
+local stroke = ToggleButton:FindFirstChildOfClass("UIStroke")
+if isRunning then
+ToggleButton.Text = "ON"
+ToggleButton.TextColor3 = Color3.fromRGB(80, 255, 80)
+if stroke then stroke.Color = Color3.fromRGB(80, 255, 80) end
+enableFreeCam()
+else
+ToggleButton.Text = "OFF"
+ToggleButton.TextColor3 = Color3.fromRGB(255, 80, 80)
+if stroke then stroke.Color = Color3.fromRGB(255, 80, 80) end
+disableFreeCam()
+end
+end)
+​RunService.RenderStepped:Connect(function()
+if isFollowing and followTarget then
+local camera = workspace.CurrentCamera
+if followTarget.Character and followTarget.Character:FindFirstChildOfClass("Humanoid") then
+local targetHum = followTarget.Character:FindFirstChildOfClass("Humanoid")
+if camera.CameraSubject ~= targetHum then
+camera.CameraSubject = targetHum
+end
+if camera.CameraType ~= Enum.CameraType.Custom then
+camera.CameraType = Enum.CameraType.Custom
+end
+if followTarget.Character:FindFirstChild("HumanoidRootPart") then
+LocalPlayer:RequestStreamAroundAsync(followTarget.Character.HumanoidRootPart.Position)
+end
+else
+if LocalPlayer.Character and LocalPlayer.Character:FindFirstChildOfClass("Humanoid") then
+camera.CameraSubject = LocalPlayer.Character:FindFirstChildOfClass("Humanoid")
+end
+end
+end
+end)
